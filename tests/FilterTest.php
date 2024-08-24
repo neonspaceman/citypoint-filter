@@ -99,4 +99,15 @@ class FilterTest extends TestCase
         $this->assertEquals( $expect, $ast, 'not valid or' );
     }
 
+    public function testLikeExpr()
+    {
+        $expect = new T\LikeExpr(
+            new T\FldVal( 'FieldName' ),
+            new T\StrVal( '"value"' )
+        );
+
+        $ast = $this->filter->getAst('like(FieldName, "value")');
+        $this->assertEquals( $expect, $ast, 'not valid like' );
+    }
+
 }

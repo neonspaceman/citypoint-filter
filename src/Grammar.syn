@@ -15,7 +15,8 @@
  *   OP = NOT ( EXPR ) |
           EQ ( EXPR ) |
           AND ( EXPR , EXPR ) |
-          OR ( EXPR , EXPR )
+          OR ( EXPR , EXPR ) |
+          LIKE ( FIELDNAME, STRING )
  *   EXPR = OP | VALUE
  *   VALUE = NUMBER | STRING | FIELDNAME | NULL
  *   NUMBER = любой число
@@ -36,6 +37,8 @@
             ['or', "return 'OR'"],
 
             ['NULL', "return 'NULL'"],
+
+            ['like', "return 'LIKE'"],
 
             [",",  "return ','" ],
             ["\\(",  "return '('" ],
@@ -68,7 +71,10 @@
                  "$$ = new Tokens\\AndExpr($3, $5)" ],
 
                [ "OR ( EXPR , EXPR )",
-                 "$$ = new Tokens\\OrExpr($3, $5)" ] ],
+                 "$$ = new Tokens\\OrExpr($3, $5)" ],
+
+               [ "LIKE ( FIELDNAME , STRING )",
+                 "$$ = new Tokens\\LikeExpr(new Tokens\\FldVal($3), new Tokens\\StrVal($5))" ] ],
 
         "VALUE": [ ["NUMBER",   "$$ = new Tokens\\IntVal($1)"  ],
                    ["STRING",   "$$ = new Tokens\\StrVal($1)"  ],
