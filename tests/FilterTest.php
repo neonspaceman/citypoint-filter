@@ -70,7 +70,6 @@ class FilterTest extends TestCase
         $ast = new T\EqExpr(
             new T\FldVal( 'ApplyFld' ),
             new T\StrVal( '"value"' ),
-            '='
         );
 
         $this->assertTrue( $ast->apply(['ApplyFld' => 'value']), 'Not valid apply with str and fld' );
@@ -110,4 +109,25 @@ class FilterTest extends TestCase
         $this->assertEquals( $expect, $ast, 'not valid like' );
     }
 
+    public static function likeApplyData(): iterable
+    {
+        yield [true, '.*', 'value'];
+
+        yield [true, 'value', 'value'];
+
+        yield [false, 'value', 'value2'];
+    }
+
+    /**
+     * @dataProvider likeApplyData
+     */
+    public function testLikeApply(bool $expected, string $pattern, string $value)
+    {
+        $ast = new T\LikeExpr(
+            new T\FldVal( 'ApplyFld' ),
+            new T\StrVal( sprintf('"%s"', $pattern) ),
+        );
+
+        $this->assertEquals($expected, $ast->apply(['ApplyFld' => $value]), 'Not valid apply with str and fld' );
+    }
 }
